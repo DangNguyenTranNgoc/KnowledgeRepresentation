@@ -191,55 +191,107 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
 
     def __calculate_1(self, e_not_know: int) -> float:
         '''
-        a: [3][j] alpha: [0][j] height_c: [7][j]
-        b: [4][j] beta : [1][j] square  : [6][j]
-        c: [5][j] delta: [2][j]
+        (1) a/sin(alpha) = b/sin(beta)
+        Calculate:
+            - a: (b*sin(alpha))/sin(beta)
+            - b: (a*sin(beta))/sin(alpha)
+            - alpha: (asin((a*sin(beta))/b)*180)/pi
+            - beta: (asin((b*sin(alpha)/a)*180)/pi
+        
+        Parameters
+        ----------
+        e_unknow: int
+            Element not known and need to be calculated
+            Input should within:
+            1: Calculate a
+            2: Calculate b
+            3: Calculate alpha (in degree)
+            4: Calculate beta (in degree)
+        Returns
+        -------
+        float: 
+            Value of c, b delta or beta
         '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
+            1: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha)),
+            2: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
             3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
             4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
         return func()
     
-    def __calculate_2(self, e_not_know: int) -> float:
+    def __calculate_2(self, e_unknown: int) -> float:
+        '''
+        (2) c/sin(delta) = b/sin(beta)
+        Calculate:
+            - c: (b*sin(delta))/sin(beta)
+            - b: (c*sin(beta))/sin(delta)
+            - delta: (asin((c*sin(beta))/b)*180)/pi
+            - beta: (asin((b*sin(delta)/c)*180)/pi
+        
+        Parameters
+        ----------
+        e_unknow: int
+            Element not known and need to be calculated
+            Input should within:
+            1: Calculate c
+            2: Calculate b
+            3: Calculate delta (in degree)
+            4: Calculate beta (in degree)
+        Returns
+        -------
+        float: 
+            Value of c, b delta or beta
+        '''
         switcher = {
-            # Find alpha
             1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
             2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
             3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
             4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
         }
 
-        func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
+        func = switcher.get(e_unknown, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
         return func()
+    
+    def __calculate_p(self) -> float:
+        return (self.__a + self.__b + self.__c) / 2
     
     def __calculate_3(self, e_not_know: int) -> float:
+        '''
+        (3) square = sqrt(p(p-a)(p-b)(p-c))
+        Calculate:
+            - a: sqrt((b^2 + c^2) + sqrt((b^2 * c^2) - (4*s^2)))
+            - b: sqrt((a^2 + c^2) + sqrt((a^2 * c^2) - (4*s^2)))
+            - c: sqrt((b^2 + a^2) + sqrt((b^2 * a^22) - (4*s^2)))
+            - square: sqrt(p(p-a)(p-b)(p-c))
+        In which: 
+            p=(a + b + c)/2
+        
+        Parameters
+        ----------
+        e_unknow: int
+            Element not known and need to be calculated
+            Input should within:
+            1: Calculate a
+            2: Calculate b
+            3: Calculate c
+            4: Calculate square
+        Returns
+        -------
+        float: 
+            Value of a, b, c or square
+        '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: sqrt((self.__b**2 + self.__c**2) + sqrt((self.__b**2 * self.__c**2) - (4*self.__s**2))),
+            2: lambda: sqrt((self.__a**2 + self.__c**2) + sqrt((self.__a**2 * self.__c**2) - (4*self.__s**2))),
+            3: lambda: sqrt((self.__b**2 + self.__a**2) + sqrt((self.__b**2 * self.__a**2) - (4*self.__s**2))),
+            4: lambda: sqrt(self.__calculate_p()*(self.__calculate_p()-self.__a)*(self.__calculate_p()-self.__b)*(self.__calculate_p()-self.__c))/2
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
+        
         return func()
     
     def __calculate_4(self, e_not_know: int) -> float:
