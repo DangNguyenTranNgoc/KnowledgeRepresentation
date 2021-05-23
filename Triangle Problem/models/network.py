@@ -89,6 +89,81 @@ class Network:
         ne_valid = sum([Network.is_valid_value(network[ne_x[i]][ne_y[i]]) for i in range(22)])
         return e_valid == 18 and ne_valid == 22 and is_valid
 
+    def __active_element(self, row: int, col: list):
+        '''
+               | (1) | (2) | (3) | (4) | (5)
+        alpha  | -1  |  0  |  0  | -1  |  0
+        beta   | -1  | -1  |  0  | -1  |  0
+        delta  |  0  | -1  |  0  | -1  |  0
+        a      | -1  |  0  | -1  |  0  |  0
+        b      | -1  | -1  | -1  |  0  |  0
+        c      |  0  | -1  | -1  |  0  | -1
+        square |  0  |  0  | -1  |  0  | -1
+        hc     |  0  |  0  |  0  |  0  | -1
+        '''
+        for i in range(len(col)):
+            self.network[row][col[i]] = 1
+
+    def activate_element(self, element: int):
+        '''
+        Activate element on network.
+
+        Parameters
+        ----------
+        element: int
+            1: alpha
+            2: beta
+            3: delta
+            4: a
+            5: b
+            6: c
+            7: square            
+            8: height from c vertex
+        '''
+        switcher = {
+            1: lambda: self.__active_element(0, [0, 3]),
+            2: lambda: self.__active_element(1, [0, 1, 3]),
+            3: lambda: self.__active_element(2, [1, 3]),
+            4: lambda: self.__active_element(3, [0, 2]),
+            5: lambda: self.__active_element(4, [0, 1, 2]),
+            6: lambda: self.__active_element(5, [1, 2, 4]),
+            7: lambda: self.__active_element(6, [2, 4]),
+            8: lambda: self.__active_element(7, [4])
+        }
+
+        func = switcher.get(element, lambda: NetWorkException.throw(ValueError('Invalid argument')))
+        
+        return func()
+    
+    def get_unknown_element(self, expression: int) -> int:
+        '''
+        Get unknown element. If the elements greater than 1 (cannot calculated), return -1. 
+        If the expression is calculated, return 0.
+
+        Parameters
+        ----------
+        expression: int
+            The index of each expression.
+        
+        Returns
+        -------
+        int:
+            The index of the element (start from 1).
+        '''
+        print('Go into Network.get_unknown_element. Expression {}'.format(expression))
+        pos = -1
+        expression -= 1
+        for i in range(8):
+            if self.network[i][expression] == -1:
+                if pos == -1:
+                    print('Now pos is {}'.format(i))
+                    pos = i
+                else:
+                    print('Too many unknown!')
+                    return -1
+        
+        return pos + 1
+
     def __str__(self) -> str:
         s = ''
         for line in self.network:

@@ -34,17 +34,7 @@ p = (a + b + c)/2
 Semantic Network:
 -----
 
-       | (1) | (2) | (3) | (4) | (5)
-a      | -1  |  0  | -1  |  0  |  0
-b      | -1  | -1  | -1  |  0  |  0
-c      |  0  | -1  | -1  |  0  | -1
-alpha  | -1  |  0  |  0  | -1  |  0
-beta   | -1  | -1  |  0  | -1  |  0
-delta  |  0  | -1  |  0  | -1  |  0
-hc     |  0  |  0  |  0  |  0  | -1
-square |  0  |  0  | -1  |  0  | -1
-
-Optimize for searching:
+Optimized:
 
        | (1) | (2) | (3) | (4) | (5)
 alpha  | -1  |  0  |  0  | -1  |  0
@@ -62,6 +52,7 @@ Pre-conditions:
 - Input of 'alpha', 'beta', 'delta' is degree and will be convert to radians.
 '''
 class TriangleSemanticException(Exception): 
+
     @classmethod
     def throw(cls, ex):
         raise ex
@@ -73,10 +64,10 @@ class TriangleSemantic:
         '''
         - a, b, c: length of sides
         - alpha, beta, delta
-        - hight_c: altitude from vertex C
+        - height_c: altitude from vertex C
         - square
         '''
-        self.__a, self.__b, self.__c, self.__alpha, self.__beta, self.__delta, self.__hight_c, self.__square = [0.0] * 8
+        self.__a, self.__b, self.__c, self.__alpha, self.__beta, self.__delta, self.__height_c, self.__square = [-1] * 8
         self.__network = Network()
 
     @property
@@ -85,15 +76,25 @@ class TriangleSemantic:
     
     @a.setter
     def a(self, value: float):
-        self.__a = value
+        self._a = value
+        self.network.activate_element(4)
+        self.spreading_activation(1)
     
+    def set_a(self, value: float):
+        self._a = value
+
     @property
     def b(self) -> float:
         return self.__b
     
     @b.setter
     def b(self, value: float):
-        self.__b = value
+        self._b = value
+        self.network.activate_element(5)
+        self.spreading_activation(1)
+    
+    def set_b(self, value: float):
+        self._b = value
 
     @property
     def c(self) -> float:
@@ -101,7 +102,12 @@ class TriangleSemantic:
     
     @c.setter
     def c(self, value: float):
-        self.__c = value
+        self._c = value
+        self.network.activate_element(6)
+        self.spreading_activation(2)
+
+    def set_c(self, value: float):
+        self._c = value
 
     @property
     def alpha(self) -> float:
@@ -112,7 +118,12 @@ class TriangleSemantic:
     
     @alpha.setter
     def alpha(self, value: float):
-        self.__alpha = value
+        self._alpha = value
+        self.network.activate_element(1)
+        self.spreading_activation(1)
+    
+    def set_alpha(self, value: float):
+        self._alpha = value
     
     @property
     def beta(self) -> float:
@@ -123,7 +134,12 @@ class TriangleSemantic:
     
     @beta.setter
     def beta(self, value: float):
-        self.__beta = value
+        self._beta = value
+        self.network.activate_element(2)
+        self.spreading_activation(1)
+    
+    def set_beta(self, value: float):
+        self._beta = value
     
     @property
     def delta(self) -> float:
@@ -134,18 +150,28 @@ class TriangleSemantic:
     
     @delta.setter
     def delta(self, value: float):
-        self.__delta = value
+        self._delta = value
+        self.network.activate_element(3)
+        self.spreading_activation(2)
+    
+    def set_delta(self, value: float):
+        self._delta = value
     
     @property
-    def hight_c(self) -> float:
+    def height_c(self) -> float:
         '''
         The altitude from vertex C
         '''
-        return self.__hight_c
+        return self.__height_c
     
-    @hight_c.setter
-    def hight_c(self, value: float):
-        self.__hight_c = value
+    @height_c.setter
+    def height_c(self, value: float):
+        self._height_c = value
+        self.network.activate_element(8)
+        self.spreading_activation(5)
+    
+    def set_height_c(self, value: float):
+        self._height_c = value
     
     @property
     def square(self) -> float:
@@ -156,7 +182,12 @@ class TriangleSemantic:
     
     @square.setter
     def square(self, value: float):
-        self.__square = value
+        self._square = value
+        self.network.activate_element(6)
+        self.spreading_activation(3)
+    
+    def set_square(self, value: float):
+        self._square = value
     
     @property
     def network(self) -> Network:
@@ -170,7 +201,11 @@ class TriangleSemantic:
     @network.setter
     def network(self, network: Network):
         _network = Network(network)
-        self.__network = _network
+        self._network = _network
+    
+    def set_network(self, network: Network):
+        _network = Network(network)
+        self._network = _network
 
     # For testing
     def __str__(self) -> str:
@@ -182,12 +217,12 @@ class TriangleSemantic:
 The Triangle semantic network
 Length              : a({a}), b({b}), c({c})
 Angle               : alpha({alpha}), beta({beta}), delta({delta})
-Altitude from c     : hight_c({hc})
+Altitude from c     : height_c({hc})
 The square          : square({s})
 The semantic network:
 {network}
 '''.format(a=self.a, b=self.b, c=self.c, alpha=self.alpha, beta=self.beta, 
-delta=self.delta, hc=self.hight_c, s=self.square, network=network)
+delta=self.delta, hc=self.height_c, s=self.square, network=network)
 
     def __calculate_1(self, e_not_know: int) -> float:
         '''
@@ -213,10 +248,10 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
             Value of c, b delta or beta
         '''
         switcher = {
-            1: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha)),
-            2: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: (self.a * sin(radians(self.beta))) / sin(radians(self.alpha)),
+            2: lambda: (self.b * sin(radians(self.alpha))) / sin(radians(self.beta)),
+            3: lambda: (self.b * sin(radians(self.alpha))) / sin(radians(self.beta)),
+            4: lambda: (self.a * sin(radians(self.beta))) / sin(radians(self.alpha))
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
@@ -246,17 +281,17 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
             Value of c, b delta or beta
         '''
         switcher = {
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: (asin((self.b * sin(radians(self.alpha))) / self.a) * ANGLE) / pi,
+            2: lambda: (asin((self.a * sin(radians(self.beta))) / self.b) * ANGLE) / pi,
+            3: lambda: (self.b * sin(radians(self.alpha))) / sin(radians(self.beta)),
+            4: lambda: (self.a * sin(radians(self.beta))) / sin(radians(self.alpha))
         }
 
         func = switcher.get(e_unknown, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
         return func()
     
     def __calculate_p(self) -> float:
-        return (self.__a + self.__b + self.__c) / 2
+        return (self.a + self.b + self.c) / 2
     
     def __calculate_3(self, e_not_know: int) -> float:
         '''
@@ -284,10 +319,10 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
             Value of a, b, c or square
         '''
         switcher = {
-            1: lambda: sqrt((self.__b**2 + self.__c**2) + sqrt((self.__b**2 * self.__c**2) - (4*self.__s**2))),
-            2: lambda: sqrt((self.__a**2 + self.__c**2) + sqrt((self.__a**2 * self.__c**2) - (4*self.__s**2))),
-            3: lambda: sqrt((self.__b**2 + self.__a**2) + sqrt((self.__b**2 * self.__a**2) - (4*self.__s**2))),
-            4: lambda: sqrt(self.__calculate_p()*(self.__calculate_p()-self.__a)*(self.__calculate_p()-self.__b)*(self.__calculate_p()-self.__c))/2
+            1: lambda: 0,
+            2: lambda: 0,
+            3: lambda: 0,
+            4: lambda: sqrt(self.__calculate_p()*(self.__calculate_p()-self.a)*(self.__calculate_p()-self.b)*(self.__calculate_p()-self.__c))/2
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
@@ -295,15 +330,30 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
         return func()
     
     def __calculate_4(self, e_not_know: int) -> float:
+        '''
+        (3) alpha + beta + delta = pi
+        Calculate:
+            - alpha: ((pi - beta - delta)*180)/pi
+            - beta: ((pi - alpha - delta))*180)/pi
+            - delta: ((pi - alpha - beta)*180)/pi
+        
+        Parameters
+        ----------
+        e_unknow: int
+            Element not known and need to be calculated
+            Input should within:
+            1: Calculate alpha (in degree)
+            2: Calculate beta (in degree)
+            3: Calculate delta (in degree)
+        Returns
+        -------
+        float: 
+            Value of alpha, beta or delta
+        '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: ((pi - self.beta - self.delta) * ANGLE) / pi,
+            2: lambda: ((pi - self.alpha - self.delta) * ANGLE) / pi,
+            3: lambda: ((pi - self.alpha - self.beta) * ANGLE) / pi
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
@@ -311,76 +361,202 @@ delta=self.delta, hc=self.hight_c, s=self.square, network=network)
         return func()
 
     def __calculate_5(self, e_not_know: int) -> float:
+        '''
+        (4) square = 1/2(hc * c)
+        Calculate:
+            - square: 0.5*(height_c * c)
+            - height_c: (2 * square)/c
+            - c: (2 * square)/height_c
+        
+        Parameters
+        ----------
+        e_unknow: int
+            Element not known and need to be calculated
+            Input should within:
+            1: Calculate square
+            2: Calculate height_c
+            3: Calculate c
+        Returns
+        -------
+        float: 
+            Value of square, height or c
+        '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: 0.5*(self.height_c * self.c),
+            2: lambda: (2 * self.square)/self.c,
+            3: lambda: (2 * self.square)/self.height_c
         }
 
         func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
 
         return func()
 
-    def __calculate_6(self, e_not_know: int) -> float:
+    def get_element_by_index(self, index: int) -> float:
+        '''
+        Get the value of an element throught index.
+
+        Parameters
+        ----------
+        element: int
+            Index of each element
+            1: alpha
+            2: beta
+            3: delta
+            4: a
+            5: b
+            6: c
+            7: square            
+            8: height from c vertex
+        '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: self.alpha,
+            2: self.beta,
+            3: self.delta,
+            4: self.a,
+            5: self.b,
+            6: self.c,
+            7: self.square,
+            8: self.height_c,
         }
 
-        func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
+        func = switcher.get(index, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
         return func()
 
-    def __calculate_7(self, e_not_know: int) -> float:
+    def set_e_value_by_index(self, index: int, value: float):
+        '''
+        Set the value of an element throught index.
+
+        Parameters
+        ----------
+        element: int
+            Index of each element
+            1: alpha
+            2: beta
+            3: delta
+            4: a
+            5: b
+            6: c
+            7: square            
+            8: height from c vertex
+        value: float
+            Value of the element
+        '''
         switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
+            1: lambda: self.set_alpha(value),
+            2: lambda: self.set_beta(value),
+            3: lambda: self.set_delta(value),
+            4: lambda: self.set_a(value),
+            5: lambda: self.set_b(value),
+            6: lambda: self.set_c(value),
+            7: lambda: self.set_square(value),
+            8: lambda: self.set_height_c(value)
         }
 
-        func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
-        return func()
-
-    def __calculate_8(self, e_not_know: int) -> float:
-        switcher = {
-            # Find alpha
-            1: lambda: (asin((self.__b * sin(radians(self.__alpha))) / self.__a) * ANGLE) / pi,
-            # Find beta
-            2: lambda: (asin((self.__a * sin(radians(self.__beta))) / self.__b) * ANGLE) / pi,
-            # Find a
-            3: lambda: (self.__b * sin(radians(self.__alpha))) / sin(radians(self.__beta)),
-            # Find b
-            4: lambda: (self.__a * sin(radians(self.__beta))) / sin(radians(self.__alpha))
-        }
-
-        func = switcher.get(e_not_know, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
-
+        func = switcher.get(index, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
         return func()
     
-    def get_unknow(self, expression: int) -> int:
-        pos = 0
-        for i in range(8):
-            if self.network[i][expression] == -1:
-                if pos == 0:
-                    pos = i
-                else:
-                    return 0
-        return pos
+    def calculate_expression_controller(self, expression: int, element_unknown: int):
+        '''
+        Calculate an expression and update an unknown element.
+        Loop:
+            1> Begin from 1.
+            2> Find unknown element.
+            3> If has, calculate the expression. Go back 1.
+            4> Can't calculate the expression (or it is calculated). Go to next expression.
+
+        Parameters
+        ----------
+        expression: int
+            The index of each expression
+            1: a/sin(alpha) = b/sin(beta)
+            2: c/sin(delta) = b/sin(beta)
+            3: square = sqrt(p(p-a)(p-b)(p-c))
+            4: alpha + beta + delta = pi
+            5: square = 1/2(hc * c)
+        element_unk
+        '''
+        switcher = {
+            1: lambda: self.__calculate_1(element_unknown),
+            2: lambda: self.__calculate_2(element_unknown),
+            3: lambda: self.__calculate_3(element_unknown),
+            4: lambda: self.__calculate_4(element_unknown),
+            5: lambda: self.__calculate_5(element_unknown)
+        }
+
+        func = switcher.get(expression, lambda: TriangleSemanticException.throw(ValueError('Invalid argument')))
+        return func()
+    
+    def spreading_activation(self, expression: int):
+        '''
+        Calculate an expression and update an unknown element.
+        Loop:
+            1> Begin from 1.
+            2> Find unknown element.
+            3> If has, calculate the expression. Go back 1.
+            4> Can't calculate the expression (or it is calculated). Go to next expression.
+
+        Parameters
+        ----------
+        expression: int
+            The index of each expression
+            1: a/sin(alpha) = b/sin(beta)
+            2: c/sin(delta) = b/sin(beta)
+            3: square = sqrt(p(p-a)(p-b)(p-c))
+            4: alpha + beta + delta = pi
+            5: square = 1/2(hc * c)
+        '''
+        print('Calculated expression: {}'.format(expression))
+        unknown_element = self.network.get_unknown_element(expression)
+        if unknown_element == -1 or unknown_element == 0:
+            return
+        
+        value = self.calculate_expression_controller(expression, unknown_element)
+        if value <= 0:
+            return
+        self.set_e_value_by_index(unknown_element, value)
+        self.network.activate_element(unknown_element)
+        print('Calculated element: {}'.format(unknown_element))
+
+        index = 1
+        while index <= 5:
+            unknown_element = self.network.get_unknown_element(expression)
+            if unknown_element == -1 or unknown_element == 0:
+                index += 1
+                continue
+
+            value = self.calculate_expression_controller(expression, unknown_element)
+            if value <= 0:
+                return
+            self.set_e_value_by_index(unknown_element, value)
+            self.network.activate_element(unknown_element)
+            print('Calculated element: {}'.format(unknown_element))
+     
+    def calculate_element(self, element: int) -> float:
+        '''
+        Return or calculate an elemnt (if not existed).
+
+        Parameters
+        ----------
+        element: int
+            1: alpha
+            2: beta
+            3: delta
+            4: a
+            5: b
+            6: c
+            7: square            
+            8: height from c vertex
+
+        Returns
+        -------
+        float: 
+            Value of a, b, c, alpha, beta, delta, height, square or -1 if not calculed
+        '''
+        value = self.get_element(element)
+        if value > 0.0:
+            return value
+        
+        
+
+        return value
 
