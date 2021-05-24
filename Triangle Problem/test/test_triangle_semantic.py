@@ -12,7 +12,6 @@ triangle_semantic = TriangleSemantic()
 
 triangle_semantic.a = 4.0
 triangle_semantic.b = 8.0
-print(triangle_semantic)
 triangle_semantic.alpha = 30.0
 
 print(triangle_semantic)
