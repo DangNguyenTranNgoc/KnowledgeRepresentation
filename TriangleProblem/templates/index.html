@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Representation - Nhóm 1</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <div class="container"><h2>Bài tập 2</h2></div>
+    <div id="exTab3" class="container">
+      <ul class="nav nav-pills">
+        <li class="active">
+          <a href="#main" data-toggle="tab">Giới thiệu</a>
+        </li>
+        <li><a href="#triangle" data-toggle="tab">Bài toán tam giác</a></li>
+        <li><a href="#2b" data-toggle="tab">Applying clearfix</a></li>
+      </ul>
+
+      <div class="tab-content clearfix">
+        <div class="tab-pane active" id="main">
+          <h3>
+            We use the class nav-pills instead of nav-tabs which automatically
+            creates a background color for the tab
+          </h3>
+        </div>
+        <div class="tab-pane" id="triangle">
+          <h3>Tính các thành phần trong một tam giác</h3>
+          <form id="calc">
+            <label for="a">Cạnh a <input type="number" placeholder="0" name="a"/></label>
+            <label for="b">Cạnh b <input type="number" placeholder="0" name="b"/></label>
+            <label for="c">Cạnh c<input type="number" placeholder="0" name="c" id=""/></label>
+            <label for="alpha">Góc Alpha<input type="number" placeholder="0" name="alpha" id=""/></label>
+            <label for="beta">Góc Beta<input type="number" placeholder="0" name="beta" id=""/></label>
+            <label for="delta">Góc Delta<input type="number" placeholder="0" name="delta" id=""/></label>
+            <label for="h_c">Đường cao từ C<input type="number" placeholder="0" name="h_c" id=""/></label>
+            <label for="s">Diện tích<input type="number" placeholder="0" name="s" id=""/></label>
+            <label for="p">Nửa chu vi<input type="number" placeholder="0" name="p" id=""/></label>
+            <input type="submit" value="Calculate" />
+          </form>
+          <span id="result"></span>
+        </div>
+        <div class="tab-pane" id="2b">
+          <h3>
+            We use the class nav-pills instead of nav-tabs which automatically
+            creates a background color for the tab
+          </h3>
+        </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+   function addSubmit(ev) {
+     ev.preventDefault();
+     $.ajax({
+       method: 'POST',
+       url: {{ url_for("triangle_calculator")|tojson }},
+       data: $(this).serialize()
+     }).done(addShow);
+   }
+
+   function addShow(data) {
+     $('#result').text(data.angle);
+   }
+   
+   $('#calc').on('submit', addSubmit);
+</script>
+  
+  </body>
+</html>
