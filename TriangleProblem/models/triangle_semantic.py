@@ -225,6 +225,7 @@ The semantic network:
 {network}
 '''.format(a=self.a, b=self.b, c=self.c, alpha=self.alpha, beta=self.beta, 
 delta=self.delta, hc=self.height_c, s=self.square, p=self.p, network=network)
+    
     def __calculate_1(self, e_not_know: int) -> float:
         '''
         (1) a/sin(alpha) = b/sin(beta)

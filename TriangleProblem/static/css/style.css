@@ -1,0 +1,74 @@
+body {
+  padding : 10px ;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+ 
+.title {
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #428bca;
+}
+ 
+#exTab3 .nav-pills > li > a {
+  font-size: 1.5em;
+}
+ 
+#exTab3 .nav-pills {
+  border-bottom: 1px solid #428bca;
+}
+ 
+#exTab3 .nav-pills > li.active > a{
+  color: #428bca;
+  background-color: #fff;
+  border-radius: 0;
+  border-bottom: 2px solid #428bca;
+  font-weight: 900;
+}
+ 
+#exTab3 .tab-content {
+  color : #428bca;
+  padding : 5px 15px;
+}
+ 
+#calc_triangle > input[type='submit']{ 
+  display: flex;
+  background-color: #428bca;
+  color: #fff;
+  border: none;
+  font-weight: 900;
+  padding: 5px 10px;
+}
+ 
+#calc_triangle > input[type='submit']:hover{
+  background-color: #5e5e5e;
+  color: #f9f9f9;
+  outline: 0;
+}
+ 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+ 
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+ 
+label > input { 
+  width: 4em;
+  color: #428bca;
+  padding: 2px 5px;
+  margin-left: 10px;
+  border: 1px solid #428bca;
+  text-align: center;
+}
+ 
+#calc_triangle > * { 
+  padding-right: 1em; 
+}
+ 
+#result { 
+  font-weight: bold; 
+}
