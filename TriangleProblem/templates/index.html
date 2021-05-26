@@ -14,16 +14,19 @@
     <link rel="stylesheet" href="../static/css/style.css" />
   </head>
   <body>
-    <div class="container"><h2>Bài tập 2</h2></div>
+    <div class="container"><h2 class="title">Bài tập 2</h2></div>
     <div id="exTab3" class="container">
       <ul class="nav nav-pills">
         <li class="active">
           <a href="#main" data-toggle="tab">Giới thiệu</a>
         </li>
-        <li><a href="#triangle" data-toggle="tab">Bài toán tam giác</a></li>
-        <li><a href="#2b" data-toggle="tab">Applying clearfix</a></li>
+        <li>
+          <a href="#triangle" data-toggle="tab">Bài toán tam giác</a>
+        </li>
+        <li>
+          <a href="#2b" data-toggle="tab">Phản ứng hóa học</a>
+        </li>
       </ul>
-
       <div class="tab-content clearfix">
         <div class="tab-pane active" id="main">
           <h3>
@@ -33,17 +36,20 @@
         </div>
         <div class="tab-pane" id="triangle">
           <h3>Tính các thành phần trong một tam giác</h3>
-          <form id="calc">
+          <form id="calc_triangle">
             <label for="a">Cạnh a <input type="number" placeholder="0" name="a"/></label>
             <label for="b">Cạnh b <input type="number" placeholder="0" name="b"/></label>
-            <label for="c">Cạnh c<input type="number" placeholder="0" name="c" id=""/></label>
-            <label for="alpha">Góc Alpha<input type="number" placeholder="0" name="alpha" id=""/></label>
-            <label for="beta">Góc Beta<input type="number" placeholder="0" name="beta" id=""/></label>
-            <label for="delta">Góc Delta<input type="number" placeholder="0" name="delta" id=""/></label>
-            <label for="h_c">Đường cao từ C<input type="number" placeholder="0" name="h_c" id=""/></label>
-            <label for="s">Diện tích<input type="number" placeholder="0" name="s" id=""/></label>
-            <label for="p">Nửa chu vi<input type="number" placeholder="0" name="p" id=""/></label>
-            <input type="submit" value="Calculate" />
+            <label for="c">Cạnh c <input type="number" placeholder="0" name="c" id=""/></label>
+            <br>
+            <label for="alpha">Góc Alpha <input type="number" placeholder="0" name="alpha" id=""/></label>
+            <label for="beta">Góc Beta <input type="number" placeholder="0" name="beta" id=""/></label>
+            <label for="delta">Góc Delta <input type="number" placeholder="0" name="delta" id=""/></label>
+            <br>
+            <label for="h_c">Đường cao từ C <input type="number" placeholder="0" name="h_c" id=""/></label>
+            <label for="s">Diện tích <input type="number" placeholder="0" name="s" id=""/></label>
+            <label for="p">Nửa chu vi <input type="number" placeholder="0" name="p" id=""/></label>
+            <br>
+            <input type="submit" value="Tính toán" />
           </form>
           <span id="result"></span>
         </div>
@@ -59,20 +65,29 @@
 
 <script>
    function addSubmit(ev) {
-     ev.preventDefault();
-     $.ajax({
-       method: 'POST',
-       url: {{ url_for("triangle_calculator")|tojson }},
-       data: $(this).serialize()
-     }).done(addShow);
-   }
+      ev.preventDefault();
+      $.ajax({
+        method: 'POST',
+        url: {{ url_for('triangle_calculator')|tojson }},
+        data: $(this).serialize()
+      }).done(addShow);
+    }
 
-   function addShow(data) {
-     $('#result').text(data.angle);
-   }
-   
-   $('#calc').on('submit', addSubmit);
+    function addShow(data) {
+      $('input[name="a"]').val(data.data.a.toFixed(2));
+      $('input[name="b"]').val(data.data.b.toFixed(2));
+      $('input[name="c"]').val(data.data.c.toFixed(2));
+
+      $('input[name="alpha"]').val(data.data.alpha.toFixed(2));
+      $('input[name="beta"]').val(data.data.beta.toFixed(2));
+      $('input[name="delta"]').val(data.data.delta.toFixed(2));
+
+      $('input[name="h_c"]').val(data.data.height_c.toFixed(2));
+      $('input[name="s"]').val(data.data.s.toFixed(2));
+      $('input[name="p"]').val(data.data.p.toFixed(2));
+    }
+
+    $('#calc_triangle').on('submit', addSubmit);
 </script>
-  
   </body>
 </html>

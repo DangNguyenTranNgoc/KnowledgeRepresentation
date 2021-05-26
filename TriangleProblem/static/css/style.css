@@ -1,41 +1,74 @@
 body {
-    padding : 10px ;
+  padding : 10px ;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-#exTab1 .tab-content {
-  color : white;
-  background-color: #428bca;
-  padding : 5px 15px;
+ 
+.title {
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #428bca;
 }
-
-#exTab2 h3 {
-  color : white;
-  background-color: #428bca;
-  padding : 5px 15px;
-}
-
-/* remove border radius for the tab */
-
-#exTab1 .nav-pills > li > a {
-  border-radius: 0;
-}
-
-/* change border radius for the tab , apply corners on top*/
-
+ 
 #exTab3 .nav-pills > li > a {
-  border-radius: 4px 4px 0 0 ;
+  font-size: 1.5em;
 }
-
+ 
+#exTab3 .nav-pills {
+  border-bottom: 1px solid #428bca;
+}
+ 
+#exTab3 .nav-pills > li.active > a{
+  color: #428bca;
+  background-color: #fff;
+  border-radius: 0;
+  border-bottom: 2px solid #428bca;
+  font-weight: 900;
+}
+ 
 #exTab3 .tab-content {
-  color : white;
-  background-color: #428bca;
+  color : #428bca;
   padding : 5px 15px;
 }
-
-ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
-li > * { padding: 1em; }
-li.active > a { color: #5e5e5e; border-bottom: 2px solid #4a4a4a; }
-form { display: flex; }
-label > input { width: 3em; }
-form > * { padding-right: 1em; }
-#result { font-weight: bold; }
+ 
+#calc_triangle > input[type='submit']{ 
+  display: flex;
+  background-color: #428bca;
+  color: #fff;
+  border: none;
+  font-weight: 900;
+  padding: 5px 10px;
+}
+ 
+#calc_triangle > input[type='submit']:hover{
+  background-color: #5e5e5e;
+  color: #f9f9f9;
+  outline: 0;
+}
+ 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+ 
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+ 
+label > input { 
+  width: 4em;
+  color: #428bca;
+  padding: 2px 5px;
+  margin-left: 10px;
+  border: 1px solid #428bca;
+  text-align: center;
+}
+ 
+#calc_triangle > * { 
+  padding-right: 1em; 
+}
+ 
+#result { 
+  font-weight: bold; 
+}
