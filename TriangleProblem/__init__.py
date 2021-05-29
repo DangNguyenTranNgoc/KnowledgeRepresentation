@@ -1,7 +1,6 @@
 import os
 from flask import (
-    Flask,
-    render_template
+    Flask
 )
 
 def create_app(config=None):
@@ -12,11 +11,6 @@ def create_app(config=None):
     app.config.from_mapping(
         SECRET_KEY = 'Knowledge@Representation'
     )
-
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
     return app
 
