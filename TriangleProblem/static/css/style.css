@@ -29,17 +29,26 @@ body {
   color : #428bca;
   padding : 5px 15px;
 }
+
+.tab-pane > .img-center {
+  width: 50%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
  
-#calc_triangle > input[type='submit']{ 
+#calc_triangle > input[type='submit'], #calc_triangle > input[type='reset']{ 
   display: flex;
   background-color: #428bca;
   color: #fff;
   border: none;
   font-weight: 900;
   padding: 5px 10px;
+  display: inline-block;
 }
  
-#calc_triangle > input[type='submit']:hover{
+#calc_triangle > input[type='submit']:hover, #calc_triangle > input[type='reset']:hover{
   background-color: #5e5e5e;
   color: #f9f9f9;
   outline: 0;

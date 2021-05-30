@@ -11,12 +11,15 @@ from .network import Network
 Triangle Semantic Network
 =====
 Solution for Triangle problem using Semantic Network
+
 Element of Triangle:
 -----
-- a, b, c: length of edges
-- alpha, beta, delta: degrees of each vertex
-- higth_c: altitude from vertex C
-- square: square of triangle
+- a, b, c: Length of edges
+- alpha, beta, delta: Degrees of each vertex
+- higth_c: The altitude from vertex C
+- square: The square of triangle
+- p: The semi-perimeter of the triangle
+
 Recipes:)
 -----
 (1) a/sin(alpha) = b/sin(beta)
@@ -27,6 +30,7 @@ Recipes:)
 (6) p = (a+b+c)/2
 Optional:
 p = (a + b + c)/2
+
 Semantic Network:
 -----
 Optimized:
@@ -40,6 +44,7 @@ c      |  0  | -1  | -1  |  0  | -1  | -1
 square |  0  |  0  | -1  |  0  | -1  |  0 
 hc     |  0  |  0  |  0  |  0  | -1  |  0 
 p      |  0  |  0  | -1  |  0  |  0  | -1 
+
 Pre-conditions:
 -----
 - Input of 'alpha', 'beta', 'delta' is degree and will be convert to radians.

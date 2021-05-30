@@ -7,14 +7,12 @@
     <title>Knowledge Representation - Nhóm 1</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-    />
+    <link rel="icon" href="../static/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/css/style.css" />
   </head>
   <body>
-    <div class="container"><h2 class="title">Bài tập 2</h2></div>
+    <div class="container"><h2 class="title">Biểu diễn tri thức và ứng dụng <br>Bài tập 2: Cài đặt mô hình tri thức cơ bản - Nhóm 1</h2></div>
     <div id="exTab3" class="container">
       <ul class="nav nav-pills">
         <li class="active">
@@ -29,12 +27,35 @@
       </ul>
       <div class="tab-content clearfix">
         <div class="tab-pane active" id="main">
-          <h3>
-            BT2 (Nhóm): Cài đặt mô hình tri thức cơ bản
-          </h3>
+          <h3>Giảng viên hướng dẫn: TS. Nguyễn Đình Hiển</h3>
+          <h3>Nhóm 1</h3>
+          <table class="table">
+            <tr>
+              <td>Nguyễn Tri Mẫu Ân</td>
+              <td>20C29003</td>
+            </tr>
+            <tr>
+              <td>Trần Ngọc Đăng Nguyên</td>
+              <td>20C29011</td>
+            </tr>
+            <tr>
+              <td>Nguyễn Thanh Thoại</td>
+              <td>20C29039</td>
+            </tr>
+            <tr>
+              <td>Hà Minh Tuấn</td>
+              <td>20C29041</td>
+            </tr>
+          </table>
+          
         </div>
         <div class="tab-pane" id="triangle">
-          <h3>Tính các thành phần trong một tam giác</h3>
+          <h3>Tính toán các thành phần trong một tam giác</h3>
+          <img class="img-center" src="../static/images/formular.png" alt="Các thành phần trong một tam giác và cá mối liên hệ giữa chúng.">
+          <p>
+            Chương trình demo ứng dụng mạng ngữ nghĩa vào bài toán tam giác. Người dùng vui lòng nhập dữ liệu vào từng ô tương ứng. Chương trình sẽ cố gắng tính toán tất cả các yếu có thể tính được và trả về hiển thị cho người dùng. 
+          </p>
+
           <form id="calc_triangle">
             <label for="a">Cạnh a <input type="number" placeholder="0" name="a"/></label>
             <label for="b">Cạnh b <input type="number" placeholder="0" name="b"/></label>
@@ -49,6 +70,7 @@
             <label for="p">Nửa chu vi <input type="number" placeholder="0" name="p" id=""/></label>
             <br>
             <input type="submit" value="Tính toán" />
+            <input type="reset" value="Nhập lại">
           </form>
           <span id="result"></span>
         </div>
@@ -67,22 +89,29 @@
       $.ajax({
         method: 'POST',
         url: {{ url_for('triangle_calculator')|tojson }},
-        data: $(this).serialize()
+        data: $(this).serialize(),
+        error: function(xhr, status, error) {
+          alert('Lỗi máy chủ: ' + xhr.responseText + '\nVui lòng thử lại!');
+        }
       }).done(addShow);
     }
 
-    function addShow(data) {
-      $('input[name="a"]').val(data.data.a.toFixed(2));
-      $('input[name="b"]').val(data.data.b.toFixed(2));
-      $('input[name="c"]').val(data.data.c.toFixed(2));
+    function addShow(response) {
+      if (response.status == 200) {
+        $('input[name="a"]').val(response.data.a.toFixed(2));
+        $('input[name="b"]').val(response.data.b.toFixed(2));
+        $('input[name="c"]').val(response.data.c.toFixed(2));
 
-      $('input[name="alpha"]').val(data.data.alpha.toFixed(2));
-      $('input[name="beta"]').val(data.data.beta.toFixed(2));
-      $('input[name="delta"]').val(data.data.delta.toFixed(2));
+        $('input[name="alpha"]').val(response.data.alpha.toFixed(2));
+        $('input[name="beta"]').val(response.data.beta.toFixed(2));
+        $('input[name="delta"]').val(response.data.delta.toFixed(2));
 
-      $('input[name="h_c"]').val(data.data.height_c.toFixed(2));
-      $('input[name="s"]').val(data.data.s.toFixed(2));
-      $('input[name="p"]').val(data.data.p.toFixed(2));
+        $('input[name="h_c"]').val(response.data.height_c.toFixed(2));
+        $('input[name="s"]').val(response.data.s.toFixed(2));
+        $('input[name="p"]').val(response.data.p.toFixed(2));
+      }else{
+        alert('Lỗi: ' + response.status + '\n' + response.message + '\nVui lòng thử lại!')
+      }
     }
 
     $('#calc_triangle').on('submit', addSubmit);

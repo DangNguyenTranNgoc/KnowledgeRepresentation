@@ -22,22 +22,29 @@ def triangle_calculator():
     # Validate params
     is_valid = validate_param(alpha, beta, delta, a, b, c, s, height_c, p)
     if not is_valid:
-        return jsonify({'status':400, 'message':'Bad Request','data':{}})
-    
-    triangle_semantic = create_triangle_semantic(a, b, c, alpha, beta, delta, height_c, s, p)
-    response_data = {
-        'alpha': triangle_semantic.alpha,
-        'beta': triangle_semantic.beta,
-        'delta': triangle_semantic.delta,
-        'a': triangle_semantic.a,
-        'b': triangle_semantic.b,
-        'c': triangle_semantic.c,
-        's': triangle_semantic.square,
-        'height_c': triangle_semantic.height_c,
-        'p': triangle_semantic.p
-    }
+        return jsonify({'status':400, 'message':'Giá trị cung cấp chưa chính xác hoặc lỗi.','data':{}})
+    try:
+        triangle_semantic = create_triangle_semantic(a, b, c, alpha, beta, delta, height_c, s, p)
+        response_data = {
+            'alpha': triangle_semantic.alpha,
+            'beta': triangle_semantic.beta,
+            'delta': triangle_semantic.delta,
+            'a': triangle_semantic.a,
+            'b': triangle_semantic.b,
+            'c': triangle_semantic.c,
+            's': triangle_semantic.square,
+            'height_c': triangle_semantic.height_c,
+            'p': triangle_semantic.p
+        }
 
-    return jsonify({'status':200, 'message':'OK','data':response_data})
+        for key, value in response_data.items():
+            if value < 0:
+                response_data[key] = 0
+
+        return jsonify({'status':200, 'message':'OK','data':response_data})
+    
+    except Exception:
+        return jsonify({'status':500, 'message':'Server Error!','data':{}})
 
 def validate_param(alpha:int=None, beta:int=None, delta:int=None,
                     a:int=None, b:int=None, c:int=None,
